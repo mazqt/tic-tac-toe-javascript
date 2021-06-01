@@ -10,11 +10,13 @@ body {
   "box4 box5 box6"
   "box7 box8 box9";
   grid-gap: 5px;
-  width: 25vw;
-  height: 25vw;
+  width: 21vw;
+  height: 21vw;
 }
 
 .box {
+  width: 7vw;
+  height: 7vw;
   border-width: 5px;
   border-style: solid;
   border-color: black;

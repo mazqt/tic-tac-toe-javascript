@@ -16,9 +16,30 @@ let gameBoard = (function() {
     return board;
   }
 
+  let hasSomeoneWon = function() {
+    if (board[0] == board[1] && board[1] == board[2] && board[0] != "_") {
+      return true;
+    } else if (board[0] == board[3] && board[3] == board[6] && board[0] != "_") {
+      return true;
+    } else if (board[6] == board[7] && board[7] == board[8] && board[6] != "_") {
+      return true;
+    } else if (board[2] == board[5] && board[5] == board[8] && board[2] != "_") {
+      return true;
+    } else if (board[1] == board[4] && board[4] == board[7] && board[1] != "_") {
+      return true;
+    } else if (board[3] == board[4] && board[4] == board[5] && board[3] != "_") {
+      return true;
+    } else if (board[0] == board[4] && board[4] == board[8] && board[0] != "_") {
+      return true;
+    } else if (board[2] == board[4] && board[4] == board[6] && board[2] != "_") {
+      return true;
+    } else { return false ;}
+  }
+
   return {
     getBoard,
-    addMark
+    addMark,
+    hasSomeoneWon
   };
 
 })();
@@ -37,21 +58,43 @@ let Player = (name, mark) => {
 
 let displayController = (function() {
 
-  let player1;
-  let player2;
-  let currentPlayer;
+  let boxes;
+  let player1 = Player("Jesper", "X");
+  let player2 = Player("Cheazy", "O");
+  let currentPlayer = player1;
+
+  let createBoard = function() {
+    boxes = []
+    //let HTMLboard = document.getElementById("board")
+    gameBoard.getBoard().forEach((mark, index) => {
+      let box = _createBox(mark, index);
+      _addEventListeners(box, index);
+      boxes.push(box);
+      //HTMLboard.appendChild(box);
+    })
+  }
 
   let renderBoard = function() {
     let HTMLboard = document.getElementById("board")
-    gameBoard.getBoard().forEach((mark, index) => {
-      let box = _createBox(mark, index);
-      //Create and add another function that assigns event listeners to each box before it's appended.
+    boxes.forEach((box) => {
       HTMLboard.appendChild(box);
     })
   }
 
-  let addButtons = function(box) {
+  let _addEventListeners = function(box, index) {
     //Add eventlisteners that look at the current player, and adds a mark on the slot corresponding to the box when clicked. It also has to swap current player, and re-run renderBoard. Maybe I should break out the function for displaying the board and creating the boxes, so I store them separately?
+    box.addEventListener("click", function() {
+      if (box.innerText == "_") {
+        gameBoard.addMark(index, currentPlayer.mark);
+        if (currentPlayer == player1) {
+          currentPlayer = player2;
+        } else {
+          currentPlayer = player1;
+        };
+        console.log(gameBoard.getBoard());
+        console.log(gameBoard.hasSomeoneWon());
+      }
+    })
   }
 
   let _createBox = function(mark, index) {
@@ -63,9 +106,11 @@ let displayController = (function() {
   }
 
   return {
+    createBoard,
     renderBoard
   };
 
 })()
 
+displayController.createBoard();
 displayController.renderBoard();
