@@ -2,7 +2,7 @@
 
 let gameBoard = (function() {
 
-  board = [
+  let board = [
     "_", "_", "_",
     "_", "_", "_",
     "_", "_", "_"
@@ -37,15 +37,28 @@ let Player = (name, mark) => {
 
 let displayController = (function() {
 
+  let player1;
+  let player2;
+  let currentPlayer;
 
+  player1 = Player("Jesper", "X")
+  gameBoard.addMark(4, player1.mark)
+  console.log(player1)
 
   let render = function() {
-    let row1 = document.getElementById("row1")
-    row1.innerText = gameBoard.getBoard().slice(0, 3);
-    let row2 = document.getElementById("row2")
-    row2.innerText = gameBoard.getBoard().slice(3, 6);
-    let row3 = document.getElementById("row3")
-    row3.innerText = gameBoard.getBoard().slice(6, 9);
+    let HTMLboard = document.getElementById("board")
+    gameBoard.getBoard().forEach((mark, index) => {
+      let box = _createBox(mark, index);
+      HTMLboard.appendChild(box);
+    })
+  }
+
+  let _createBox = function(mark, index) {
+    let box = document.createElement("div");
+    box.innerText = mark;
+    box.classList.add("box");
+    box.setAttribute("id", index);
+    return box;
   }
 
   return {
@@ -54,6 +67,4 @@ let displayController = (function() {
 
 })()
 
-
-console.log(gameBoard.getBoard());
 displayController.render()
