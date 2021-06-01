@@ -83,18 +83,7 @@ let displayController = (function() {
 
   let _addEventListeners = function(box, index) {
     //Add eventlisteners that look at the current player, and adds a mark on the slot corresponding to the box when clicked. It also has to swap current player, and re-run renderBoard. Maybe I should break out the function for displaying the board and creating the boxes, so I store them separately?
-    box.addEventListener("click", function() {
-      if (box.innerText == "_") {
-        gameBoard.addMark(index, currentPlayer.mark);
-        if (currentPlayer == player1) {
-          currentPlayer = player2;
-        } else {
-          currentPlayer = player1;
-        };
-        console.log(gameBoard.getBoard());
-        console.log(gameBoard.hasSomeoneWon());
-      }
-    })
+    box.addEventListener("click", _boxEvent.bind(null, box, index));
   }
 
   let _createBox = function(mark, index) {
@@ -103,6 +92,21 @@ let displayController = (function() {
     box.classList.add("box");
     box.setAttribute("id", index);
     return box;
+  }
+
+  let _boxEvent = function(box, index) {
+    if (gameBoard.getBoard()[index] == "_") {
+      gameBoard.addMark(index, currentPlayer.mark);
+      if (currentPlayer == player1) {
+        currentPlayer = player2;
+      } else {
+        currentPlayer = player1;
+      };
+      box.innerText = currentPlayer.mark
+      displayController.renderBoard();
+      console.log(gameBoard.getBoard());
+      console.log(gameBoard.hasSomeoneWon());
+    }
   }
 
   return {
