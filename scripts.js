@@ -41,16 +41,17 @@ let displayController = (function() {
   let player2;
   let currentPlayer;
 
-  player1 = Player("Jesper", "X")
-  gameBoard.addMark(4, player1.mark)
-  console.log(player1)
-
-  let render = function() {
+  let renderBoard = function() {
     let HTMLboard = document.getElementById("board")
     gameBoard.getBoard().forEach((mark, index) => {
       let box = _createBox(mark, index);
+      //Create and add another function that assigns event listeners to each box before it's appended.
       HTMLboard.appendChild(box);
     })
+  }
+
+  let addButtons = function(box) {
+    //Add eventlisteners that look at the current player, and adds a mark on the slot corresponding to the box when clicked. It also has to swap current player, and re-run renderBoard. Maybe I should break out the function for displaying the board and creating the boxes, so I store them separately?
   }
 
   let _createBox = function(mark, index) {
@@ -62,9 +63,9 @@ let displayController = (function() {
   }
 
   return {
-    render
+    renderBoard
   };
 
 })()
 
-displayController.render()
+displayController.renderBoard();
