@@ -10,10 +10,47 @@
 
 <body>
 
+  <div id="head">
+    <h1>Tic Tac Toe!</h1>
+  </div>
+
+  <div id="playerchoices">
+    <form>
+      <button type="button" name="pvp" id="pvpbutton">Player vs Player</button><br><br>
+      <button type="button" name="pvai" id="pvaibutton">Player vs AI</button>
+    </form>
+  </div>
+
+  <div  id="info">
+
+  </div>
+
   <div id="board">
   </div>
 
   <script src="scripts.js"></script>
+
+  <template id="pvp">
+    <form id="players">
+      <label name="player1">Player 1:</label>
+      <input type="text" name="player1" id="player1" required><br><br>
+      <label name="player2">Player 2:</label>
+      <input type="text" name="player2" id="player2" required><br><br>
+      <button type="submit" id="start">Start</button>
+    </form>
+  </template>
+
+  <template id="pvai">
+    <form id="players">
+      <label name="player1">Player 1:</label>
+      <input type="text" name="player1" id="player1" required><br><br>
+      <button type="submit" id="start">Start</button>
+    </form>
+  </template>
+
+  <template id="playagain">
+    <button type="button" id="playagainbutton">Play Again</button>
+  </template>
 
 </body>
 
