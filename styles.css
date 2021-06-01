@@ -1,6 +1,15 @@
 body {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+#playerChoices {
+  padding: 10px;
+}
+
+#playagainbutton {
+  margin-bottom: 10px;
 }
 
 #board {

@@ -59,29 +59,96 @@ let Player = (name, mark) => {
 let displayController = (function() {
 
   let boxes;
-  let player1 = Player("Jesper", "X");
-  let player2 = Player("Cheazy", "O");
-  let currentPlayer = player1;
+  let player1;
+  let player2 = Player("HAL", "O");
+  let currentPlayer
+  let won = false;
+  let pvp = true;
 
-  let createBoard = function() {
+  let _createBoard = function() {
     boxes = []
-    //let HTMLboard = document.getElementById("board")
     gameBoard.getBoard().forEach((mark, index) => {
       let box = _createBox(mark, index);
-      _addEventListeners(box, index);
+      _addEventListenersToBoxes(box, index);
       boxes.push(box);
-      //HTMLboard.appendChild(box);
     })
   }
 
-  let renderBoard = function() {
-    let HTMLboard = document.getElementById("board")
-    boxes.forEach((box) => {
-      HTMLboard.appendChild(box);
+  let _renderBoard = function() {
+    if (won) {
+      let info = document.getElementById("info");
+      let congratsMessage = document.createElement("h1");
+      congratsMessage.innerText = currentPlayer.name + " has won!";
+      info.appendChild(congratsMessage);
+      let button = _createRestartButton();
+      info.appendChild(button);
+
+    } else {
+      let HTMLboard = document.getElementById("board")
+      boxes.forEach((box) => {
+        HTMLboard.appendChild(box);
+      })
+    }
+  }
+
+  let addEventListenersToPlayerChoice = function() {
+    let pvpbutton = document.getElementById("pvpbutton");
+    let pvaibutton = document.getElementById("pvaibutton");
+    _playerButtonEvent(pvpbutton);
+    _playerButtonEvent(pvaibutton);
+  }
+
+  let _createRestartButton = function() {
+    let template = document.getElementById("playagain");
+    let button = template.content.getElementById("playagainbutton");
+    button.addEventListener("click", function() {
+      location.reload();
+    })
+    return button;
+  }
+
+  let _playerButtonEvent = function(button) {
+    if (button.id == "pvpbutton") {
+      button.addEventListener("click", function () {
+        let template = document.getElementById("pvp");
+        let form = template.content.getElementById("players")
+        let playerchoices = document.getElementById("playerchoices");
+        playerchoices.replaceChildren(form);
+        _addStartButtonEvent();
+      });
+    } else {
+      button.addEventListener("click", function () {
+        pvp = false;
+        let template = document.getElementById("pvai");
+        let form = template.content.getElementById("players")
+        let playerchoices = document.getElementById("playerchoices");
+        playerchoices.replaceChildren(form);
+        _addStartButtonEvent();
+      });
+    }
+  }
+
+  let _addStartButtonEvent = function() {
+    let playerForm = document.getElementById("players");
+    playerForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      let formData = new FormData(this);
+      if (pvp) {
+        let form = document.getElementById("playerchoices");
+        form.style.display = "none";
+        player1 = Player(formData.get("player1"), "X");
+        player2 = Player(formData.get("player2"), "O");
+        currentPlayer = player1;
+        _createBoard();
+        console.log(player1)
+        console.log(player2)
+        console.log(boxes)
+        _renderBoard();
+      }
     })
   }
 
-  let _addEventListeners = function(box, index) {
+  let _addEventListenersToBoxes = function(box, index) {
     //Add eventlisteners that look at the current player, and adds a mark on the slot corresponding to the box when clicked. It also has to swap current player, and re-run renderBoard. Maybe I should break out the function for displaying the board and creating the boxes, so I store them separately?
     box.addEventListener("click", _boxEvent.bind(null, box, index));
   }
@@ -95,26 +162,29 @@ let displayController = (function() {
   }
 
   let _boxEvent = function(box, index) {
-    if (gameBoard.getBoard()[index] == "_") {
+    if (gameBoard.getBoard()[index] == "_" && won == false) {
       gameBoard.addMark(index, currentPlayer.mark);
-      if (currentPlayer == player1) {
-        currentPlayer = player2;
-      } else {
-        currentPlayer = player1;
-      };
-      box.innerText = currentPlayer.mark
-      displayController.renderBoard();
-      console.log(gameBoard.getBoard());
-      console.log(gameBoard.hasSomeoneWon());
+      box.innerText = currentPlayer.mark;
+      if (gameBoard.hasSomeoneWon()) {
+        won = true;
+      }
+      _renderBoard();
+      _swapPlayer();
     }
   }
 
+  let _swapPlayer = function() {
+    if (currentPlayer == player1) {
+      currentPlayer = player2;
+    } else {
+      currentPlayer = player1;
+    };
+  }
+
   return {
-    createBoard,
-    renderBoard
+    addEventListenersToPlayerChoice
   };
 
 })()
 
-displayController.createBoard();
-displayController.renderBoard();
+displayController.addEventListenersToPlayerChoice()
