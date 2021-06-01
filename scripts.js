@@ -82,7 +82,13 @@ let displayController = (function() {
       info.appendChild(congratsMessage);
       let button = _createRestartButton();
       info.appendChild(button);
-
+    } else if (_boardFull()) {
+      let info = document.getElementById("info");
+      let congratsMessage = document.createElement("h1");
+      congratsMessage.innerText = "It's a draw!";
+      info.appendChild(congratsMessage);
+      let button = _createRestartButton();
+      info.appendChild(button);
     } else {
       let HTMLboard = document.getElementById("board")
       boxes.forEach((box) => {
@@ -96,6 +102,21 @@ let displayController = (function() {
     let pvaibutton = document.getElementById("pvaibutton");
     _playerButtonEvent(pvpbutton);
     _playerButtonEvent(pvaibutton);
+  }
+
+  let _boardFull = function() {
+    let count = 9
+    let board = gameBoard.getBoard();
+    board.forEach((box) => {
+      if (box != "_") {
+        count --;
+      }
+    })
+    if (count == 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   let _createRestartButton = function() {
@@ -140,9 +161,14 @@ let displayController = (function() {
         player2 = Player(formData.get("player2"), "O");
         currentPlayer = player1;
         _createBoard();
-        console.log(player1)
-        console.log(player2)
-        console.log(boxes)
+        _renderBoard();
+      } else {
+        console.log("Hi")
+        let form = document.getElementById("playerchoices");
+        form.style.display = "none";
+        player1 = Player(formData.get("player1"), "X");
+        currentPlayer = player1;
+        _createBoard();
         _renderBoard();
       }
     })
@@ -162,14 +188,40 @@ let displayController = (function() {
   }
 
   let _boxEvent = function(box, index) {
-    if (gameBoard.getBoard()[index] == "_" && won == false) {
-      gameBoard.addMark(index, currentPlayer.mark);
-      box.innerText = currentPlayer.mark;
-      if (gameBoard.hasSomeoneWon()) {
-        won = true;
+    if (pvp) {
+      if (gameBoard.getBoard()[index] == "_" && won == false) {
+        gameBoard.addMark(index, currentPlayer.mark);
+        box.innerText = currentPlayer.mark;
+        if (gameBoard.hasSomeoneWon()) {
+          won = true;
+        }
+        _renderBoard();
+        _swapPlayer();
       }
-      _renderBoard();
-      _swapPlayer();
+    } else {
+      if (gameBoard.getBoard()[index] == "_" && won == false) {
+        gameBoard.addMark(index, currentPlayer.mark);
+        box.innerText = currentPlayer.mark;
+        if (gameBoard.hasSomeoneWon()) {
+          won = true;
+          _renderBoard();
+          return;
+        }
+        _swapPlayer();
+        _aiTurn();
+        _renderBoard();
+        _swapPlayer();
+      }
+    }
+  }
+
+  let _aiTurn = function() {
+    let index = Math.floor(Math.random() * 9);
+    if (gameBoard.getBoard()[index] == "_") {
+      gameBoard.addMark(index, currentPlayer.mark);
+      boxes[index].innerText = currentPlayer.mark;
+    } else {
+      _aiTurn();
     }
   }
 
