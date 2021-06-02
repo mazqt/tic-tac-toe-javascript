@@ -75,21 +75,23 @@ let displayController = (function() {
   }
 
   let _renderBoard = function() {
+    const info = document.getElementById("info");
     if (won) {
-      let info = document.getElementById("info");
+      info.innerHTML = "";
       let congratsMessage = document.createElement("h1");
       congratsMessage.innerText = currentPlayer.name + " has won!";
       info.appendChild(congratsMessage);
       let button = _createRestartButton();
       info.appendChild(button);
     } else if (_boardFull()) {
-      let info = document.getElementById("info");
-      let congratsMessage = document.createElement("h1");
-      congratsMessage.innerText = "It's a draw!";
-      info.appendChild(congratsMessage);
+      info.innerHTL = "";
+      let drawMessage = document.createElement("h1");
+      drawMessage.innerText = "It's a draw!";
+      info.appendChild(drawMessage);
       let button = _createRestartButton();
       info.appendChild(button);
     } else {
+      info.innerText = "It is " + currentPlayer.name + "'s turn"
       let HTMLboard = document.getElementById("board")
       boxes.forEach((box) => {
         HTMLboard.appendChild(box);
@@ -115,7 +117,7 @@ let displayController = (function() {
     if (count == 0) {
       return true;
     } else {
-      return false;
+      return false
     }
   }
 
@@ -163,7 +165,6 @@ let displayController = (function() {
         _createBoard();
         _renderBoard();
       } else {
-        console.log("Hi")
         let form = document.getElementById("playerchoices");
         form.style.display = "none";
         player1 = Player(formData.get("player1"), "X");
@@ -194,9 +195,11 @@ let displayController = (function() {
         box.innerText = currentPlayer.mark;
         if (gameBoard.hasSomeoneWon()) {
           won = true;
+          _renderBoard();
+        } else {
+          _swapPlayer();
+          _renderBoard();
         }
-        _renderBoard();
-        _swapPlayer();
       }
     } else {
       if (gameBoard.getBoard()[index] == "_" && won == false) {
@@ -205,12 +208,12 @@ let displayController = (function() {
         if (gameBoard.hasSomeoneWon()) {
           won = true;
           _renderBoard();
-          return;
+        } else {
+          _swapPlayer();
+          _aiTurn();
+          _swapPlayer();
+          _renderBoard();
         }
-        _swapPlayer();
-        _aiTurn();
-        _renderBoard();
-        _swapPlayer();
       }
     }
   }
