@@ -177,7 +177,6 @@ const displayController = (function() {
 
   const _createBox = function(mark, index) {
     let box = document.createElement("div");
-    box.innerText = mark;
     box.classList.add("box");
     box.setAttribute("id", index);
     return box;
@@ -187,7 +186,7 @@ const displayController = (function() {
     if (pvp) {
       if (gameBoard.getBoard()[index] == "_" && won == false) {
         gameBoard.addMark(index, currentPlayer.mark);
-        box.innerText = currentPlayer.mark;
+        box.classList.toggle(currentPlayer.mark);
         if (gameBoard.hasSomeoneWon()) {
           won = true;
           _renderBoard();
@@ -199,7 +198,7 @@ const displayController = (function() {
     } else {
       if (gameBoard.getBoard()[index] == "_" && won == false) {
         gameBoard.addMark(index, currentPlayer.mark);
-        box.innerText = currentPlayer.mark;
+        box.classList.toggle(currentPlayer.mark);
         if (gameBoard.hasSomeoneWon()) {
           won = true;
           _renderBoard();
@@ -223,7 +222,7 @@ const displayController = (function() {
     const index = Math.floor(Math.random() * 9);
     if (gameBoard.getBoard()[index] == "_") {
       gameBoard.addMark(index, currentPlayer.mark);
-      boxes[index].innerText = currentPlayer.mark;
+      boxes[index].classList.toggle(currentPlayer.mark);
     } else {
       _aiTurn();
     }

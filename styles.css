@@ -30,3 +30,13 @@ body {
   border-style: solid;
   border-color: black;
 }
+
+.X {
+  background-image: url("https://www.pngkit.com/png/detail/76-760200_big-red-x-red-x-mark-transparent-background.png");
+  background-size: 7vw;
+}
+
+.O {
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/O-Jolle_red.svg/540px-O-Jolle_red.svg.png");
+  background-size: 7vw;
+}
