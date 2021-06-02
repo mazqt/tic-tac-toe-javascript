@@ -1,6 +1,6 @@
 //The gameboard itself will be kept inside of an array. I can use an IIFE bound to a variable for this since there'll just be one gameboard. This also lets me limit the ways of interacting with it to the functions I expose in the returned object.
 
-let gameBoard = (function() {
+const gameBoard = (function() {
 
   let board = [
     "_", "_", "_",
@@ -8,15 +8,15 @@ let gameBoard = (function() {
     "_", "_", "_"
   ];
 
-  let addMark = function(coordinate, mark) {
+  const addMark = function(coordinate, mark) {
     board[coordinate] = mark;
   }
 
-  let getBoard = function() {
+  const getBoard = function() {
     return board;
   }
 
-  let hasSomeoneWon = function() {
+  const hasSomeoneWon = function() {
     if (board[0] == board[1] && board[1] == board[2] && board[0] != "_") {
       return true;
     } else if (board[0] == board[3] && board[3] == board[6] && board[0] != "_") {
@@ -46,7 +46,7 @@ let gameBoard = (function() {
 
 //The players will be made with factory functions, since it's good practice for when you're creating multiple copies of an object.
 
-let Player = (name, mark) => {
+const Player = (name, mark) => {
 
   return {
     name,
@@ -56,7 +56,7 @@ let Player = (name, mark) => {
 
 //A function to execute the game logic itself and communicate with the DOM to display things will also be necessary. This can also be made as a module, just like the gameboard.
 
-let displayController = (function() {
+const displayController = (function() {
 
   let boxes;
   let player1;
@@ -65,7 +65,7 @@ let displayController = (function() {
   let won = false;
   let pvp = true;
 
-  let _createBoard = function() {
+  const _createBoard = function() {
     boxes = []
     gameBoard.getBoard().forEach((mark, index) => {
       let box = _createBox(mark, index);
@@ -74,7 +74,7 @@ let displayController = (function() {
     })
   }
 
-  let _renderBoard = function() {
+  const _renderBoard = function() {
     const info = document.getElementById("info");
     if (won) {
       info.innerHTML = "";
@@ -84,7 +84,7 @@ let displayController = (function() {
       let button = _createRestartButton();
       info.appendChild(button);
     } else if (_boardFull()) {
-      info.innerHTL = "";
+      info.innerHTML = "";
       let drawMessage = document.createElement("h1");
       drawMessage.innerText = "It's a draw!";
       info.appendChild(drawMessage);
@@ -99,14 +99,14 @@ let displayController = (function() {
     }
   }
 
-  let addEventListenersToPlayerChoice = function() {
+  const addEventListenersToPlayerChoice = function() {
     let pvpbutton = document.getElementById("pvpbutton");
     let pvaibutton = document.getElementById("pvaibutton");
     _playerButtonEvent(pvpbutton);
     _playerButtonEvent(pvaibutton);
   }
 
-  let _boardFull = function() {
+  const _boardFull = function() {
     let count = 9
     let board = gameBoard.getBoard();
     board.forEach((box) => {
@@ -121,7 +121,7 @@ let displayController = (function() {
     }
   }
 
-  let _createRestartButton = function() {
+  const _createRestartButton = function() {
     let template = document.getElementById("playagain");
     let button = template.content.getElementById("playagainbutton");
     button.addEventListener("click", function() {
@@ -130,7 +130,7 @@ let displayController = (function() {
     return button;
   }
 
-  let _playerButtonEvent = function(button) {
+  const _playerButtonEvent = function(button) {
     if (button.id == "pvpbutton") {
       button.addEventListener("click", function () {
         let template = document.getElementById("pvp");
@@ -151,7 +151,7 @@ let displayController = (function() {
     }
   }
 
-  let _addStartButtonEvent = function() {
+  const _addStartButtonEvent = function() {
     let playerForm = document.getElementById("players");
     playerForm.addEventListener("submit", function(event) {
       event.preventDefault();
@@ -175,12 +175,11 @@ let displayController = (function() {
     })
   }
 
-  let _addEventListenersToBoxes = function(box, index) {
-    //Add eventlisteners that look at the current player, and adds a mark on the slot corresponding to the box when clicked. It also has to swap current player, and re-run renderBoard. Maybe I should break out the function for displaying the board and creating the boxes, so I store them separately?
+  const _addEventListenersToBoxes = function(box, index) {
     box.addEventListener("click", _boxEvent.bind(null, box, index));
   }
 
-  let _createBox = function(mark, index) {
+  const _createBox = function(mark, index) {
     let box = document.createElement("div");
     box.innerText = mark;
     box.classList.add("box");
@@ -188,7 +187,7 @@ let displayController = (function() {
     return box;
   }
 
-  let _boxEvent = function(box, index) {
+  const _boxEvent = function(box, index) {
     if (pvp) {
       if (gameBoard.getBoard()[index] == "_" && won == false) {
         gameBoard.addMark(index, currentPlayer.mark);
@@ -218,7 +217,7 @@ let displayController = (function() {
     }
   }
 
-  let _aiTurn = function() {
+  const _aiTurn = function() {
     let index = Math.floor(Math.random() * 9);
     if (gameBoard.getBoard()[index] == "_") {
       gameBoard.addMark(index, currentPlayer.mark);
@@ -228,7 +227,7 @@ let displayController = (function() {
     }
   }
 
-  let _swapPlayer = function() {
+  const _swapPlayer = function() {
     if (currentPlayer == player1) {
       currentPlayer = player2;
     } else {
