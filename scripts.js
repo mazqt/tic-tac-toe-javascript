@@ -207,6 +207,11 @@ const displayController = (function() {
           _swapPlayer();
           _renderBoard();
           _aiTurn();
+          if (gameBoard.hasSomeoneWon()) {
+            won = true;
+            _renderBoard();
+            return;
+          }
           _swapPlayer();
           _renderBoard();
         }
