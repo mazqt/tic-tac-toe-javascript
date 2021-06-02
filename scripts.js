@@ -44,8 +44,6 @@ const gameBoard = (function() {
 
 })();
 
-//The players will be made with factory functions, since it's good practice for when you're creating multiple copies of an object.
-
 const Player = (name, mark) => {
 
   return {
@@ -53,8 +51,6 @@ const Player = (name, mark) => {
     mark
   };
 }
-
-//A function to execute the game logic itself and communicate with the DOM to display things will also be necessary. This can also be made as a module, just like the gameboard.
 
 const displayController = (function() {
 
@@ -81,18 +77,18 @@ const displayController = (function() {
       let congratsMessage = document.createElement("h1");
       congratsMessage.innerText = currentPlayer.name + " has won!";
       info.appendChild(congratsMessage);
-      let button = _createRestartButton();
+      const button = _createRestartButton();
       info.appendChild(button);
     } else if (_boardFull()) {
       info.innerHTML = "";
       let drawMessage = document.createElement("h1");
       drawMessage.innerText = "It's a draw!";
       info.appendChild(drawMessage);
-      let button = _createRestartButton();
+      const button = _createRestartButton();
       info.appendChild(button);
     } else {
       info.innerText = "It is " + currentPlayer.name + "'s turn"
-      let HTMLboard = document.getElementById("board")
+      const HTMLboard = document.getElementById("board")
       boxes.forEach((box) => {
         HTMLboard.appendChild(box);
       })
@@ -100,15 +96,15 @@ const displayController = (function() {
   }
 
   const addEventListenersToPlayerChoice = function() {
-    let pvpbutton = document.getElementById("pvpbutton");
-    let pvaibutton = document.getElementById("pvaibutton");
+    const pvpbutton = document.getElementById("pvpbutton");
+    const pvaibutton = document.getElementById("pvaibutton");
     _playerButtonEvent(pvpbutton);
     _playerButtonEvent(pvaibutton);
   }
 
   const _boardFull = function() {
     let count = 9
-    let board = gameBoard.getBoard();
+    const board = gameBoard.getBoard();
     board.forEach((box) => {
       if (box != "_") {
         count --;
@@ -122,8 +118,8 @@ const displayController = (function() {
   }
 
   const _createRestartButton = function() {
-    let template = document.getElementById("playagain");
-    let button = template.content.getElementById("playagainbutton");
+    const template = document.getElementById("playagain");
+    const button = template.content.getElementById("playagainbutton");
     button.addEventListener("click", function() {
       location.reload();
     })
@@ -133,18 +129,18 @@ const displayController = (function() {
   const _playerButtonEvent = function(button) {
     if (button.id == "pvpbutton") {
       button.addEventListener("click", function () {
-        let template = document.getElementById("pvp");
-        let form = template.content.getElementById("players")
-        let playerchoices = document.getElementById("playerchoices");
+        const template = document.getElementById("pvp");
+        const form = template.content.getElementById("players")
+        const playerchoices = document.getElementById("playerchoices");
         playerchoices.replaceChildren(form);
         _addStartButtonEvent();
       });
     } else {
       button.addEventListener("click", function () {
         pvp = false;
-        let template = document.getElementById("pvai");
-        let form = template.content.getElementById("players")
-        let playerchoices = document.getElementById("playerchoices");
+        const template = document.getElementById("pvai");
+        const form = template.content.getElementById("players")
+        const playerchoices = document.getElementById("playerchoices");
         playerchoices.replaceChildren(form);
         _addStartButtonEvent();
       });
@@ -152,12 +148,12 @@ const displayController = (function() {
   }
 
   const _addStartButtonEvent = function() {
-    let playerForm = document.getElementById("players");
+    const playerForm = document.getElementById("players");
     playerForm.addEventListener("submit", function(event) {
       event.preventDefault();
-      let formData = new FormData(this);
+      const formData = new FormData(this);
       if (pvp) {
-        let form = document.getElementById("playerchoices");
+        const form = document.getElementById("playerchoices");
         form.style.display = "none";
         player1 = Player(formData.get("player1"), "X");
         player2 = Player(formData.get("player2"), "O");
@@ -165,7 +161,7 @@ const displayController = (function() {
         _createBoard();
         _renderBoard();
       } else {
-        let form = document.getElementById("playerchoices");
+        const form = document.getElementById("playerchoices");
         form.style.display = "none";
         player1 = Player(formData.get("player1"), "X");
         currentPlayer = player1;
@@ -209,6 +205,7 @@ const displayController = (function() {
           _renderBoard();
         } else {
           _swapPlayer();
+          _renderBoard();
           _aiTurn();
           _swapPlayer();
           _renderBoard();
@@ -218,7 +215,7 @@ const displayController = (function() {
   }
 
   const _aiTurn = function() {
-    let index = Math.floor(Math.random() * 9);
+    const index = Math.floor(Math.random() * 9);
     if (gameBoard.getBoard()[index] == "_") {
       gameBoard.addMark(index, currentPlayer.mark);
       boxes[index].innerText = currentPlayer.mark;
